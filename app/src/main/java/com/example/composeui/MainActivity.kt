@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -24,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeui.ui.theme.*
+import com.example.composeui.utils.FILTER_CONTENT_LIST
+import com.example.composeui.utils.FilterContent
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +38,10 @@ class MainActivity : ComponentActivity() {
                        .background(Grey)
                        .fillMaxSize()
                 ) {
-                    HeaderProfileComponent()
                     SearchInputComponent()
+                    FilterOptionsComponent()
+                    HeaderProfileComponent()
+
                 }
             }
         }
@@ -117,6 +122,37 @@ class MainActivity : ComponentActivity() {
                 trailingIconColor = Black
             )
         )
+    }
+
+    @Composable
+    fun FilterOptionsComponent() {
+        val filterOptions = FILTER_CONTENT_LIST
+        LazyRow(
+            Modifier.padding(top = 15.dp, start = 15.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ){
+            items(filterOptions.size){
+                ChipComponent(filter = filterOptions[it])
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun ChipComponent(filter: FilterContent) {
+        val contentColor = filter.contentColor
+        val chipBackground = filter.backgroundColor
+        val filterText = filter.filterText
+
+        Chip(
+            onClick = { /*TODO*/ },
+            colors = ChipDefaults.chipColors(
+                contentColor = contentColor,
+                backgroundColor = chipBackground
+            )
+        ) {
+            Text(text = filterText, fontFamily = nunitoMedium )
+        }
     }
 }
 
