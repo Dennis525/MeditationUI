@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +28,8 @@ import androidx.compose.ui.unit.sp
 import com.example.composeui.ui.theme.*
 import com.example.composeui.utils.FILTER_CONTENT_LIST
 import com.example.composeui.utils.FilterContent
+import com.example.composeui.utils.MEDITATION_TYPE_LIST
+import com.example.composeui.utils.MeditationType
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +41,11 @@ class MainActivity : ComponentActivity() {
                        .background(Grey)
                        .fillMaxSize()
                 ) {
+                    HeaderProfileComponent()
                     SearchInputComponent()
                     FilterOptionsComponent()
-                    HeaderProfileComponent()
+                    MeditationTypesComponent()
+
 
                 }
             }
@@ -51,7 +56,7 @@ class MainActivity : ComponentActivity() {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(start = 25.dp, end = 25.dp)
         ) {
             Row(
@@ -149,9 +154,80 @@ class MainActivity : ComponentActivity() {
             colors = ChipDefaults.chipColors(
                 contentColor = contentColor,
                 backgroundColor = chipBackground
-            )
+            ),
+            shape = RoundedCornerShape(8.dp)
         ) {
             Text(text = filterText, fontFamily = nunitoMedium )
+        }
+    }
+
+    @Composable
+    fun MeditationTypesComponent() {
+        val meditationOptions = MEDITATION_TYPE_LIST
+        LazyColumn(
+            Modifier.padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ){
+            items(meditationOptions.size){
+                MeditationOptionComponent(meditationTypes = meditationOptions[it])
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun MeditationOptionComponent(meditationTypes:MeditationType) {
+        Card(
+            shape = RoundedCornerShape(14.dp),
+            modifier = Modifier.fillMaxSize(),
+            backgroundColor = meditationTypes.backgroundColor
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Row(
+                   horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Chip(
+                        onClick = { /*TODO*/ },
+                        colors = ChipDefaults.chipColors(
+                            contentColor = Black,
+                            backgroundColor = meditationTypes.timeBackgroundColor
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(text = meditationTypes.duration, fontFamily = nunitoMedium )
+                    }
+                    Chip(
+                        onClick = { /*TODO*/ },
+                        colors = ChipDefaults.chipColors(
+                            contentColor = Black,
+                            backgroundColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(text = meditationTypes.teacher, fontFamily = nunitoMedium )
+                    }
+
+                }
+                Text(
+                    text = meditationTypes.title,
+                    fontFamily = nunitoBold,
+                    fontSize = 18.sp,
+                    color = meditationTypes.contentColor,
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = meditationTypes.description,
+                    fontFamily = nunitoLight,
+                    fontSize = 16.sp,
+                    color = meditationTypes.contentColor,
+                    textAlign = TextAlign.Start
+                )
+
+            }
         }
     }
 }
